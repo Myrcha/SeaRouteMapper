@@ -1,0 +1,223 @@
+html,body {
+	background-color: #ffffff;
+	height: 100%;
+	width: 100%;
+	margin: 0; 
+	padding: 0;
+	overflow: hidden;
+	color: #000000;
+}
+
+img {
+    vertical-align: middle;
+}
+
+#map {
+	height: 100%;
+	width: 100%;
+	padding: 0; margin: 0;
+}
+ 
+#actionDialog {
+    position:absolute;
+    top:50px;
+    left:60px;
+    visibility:hidden;
+    border: 2px solid #000080;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px 6px 6px 6px;
+    background-color: #FFF;
+}
+
+/*
+	OpenLayers-------------------------------------------------------
+*/
+.olImageLoadError {
+    display: none !important;
+}
+
+.olControlMousePositionDM {
+	bottom:0em;
+	right: 0em;
+	background-color: #FFF;
+	margin: 0; 
+	padding: 2px;
+	font-family: monospace;
+}
+
+/*
+	Top menu---------------------------------------------------------
+*/
+#topmenu {
+	margin-bottom: 5px;
+	border: 2px solid #000080;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	background-color: #FFF;
+	padding: 2px;
+}
+
+#topmenu ul {
+	margin: 0 10px 0 0;
+	padding: 0;
+	float:right;
+}
+
+#topmenu ul li {
+	list-style: none;
+	display: block;
+	float: left;
+}
+
+#topmenu ul li:hover {
+	background-color: #ADD8E6;
+	cursor:pointer
+}
+
+#topmenu img {
+	text-decoration: none;
+	padding: 0 5px 0 5px;
+	color: #000;
+}
+
+/* * {
+	margin: 
+	padding: 0;
+} */
+
+ul {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+/*
+    Top menu level one-----------------------------------------------
+*/
+ul.dropdown {
+	position: relative;
+	background-color: #FFF;
+}
+
+ul.dropdown img {
+	text-decoration: none;
+	color: #000;
+}
+
+ul.dropdown li						{ font-weight: normal; float: left; background: #fff; color: black;}
+ul.dropdown a:hover			{ color: black;  cursor:pointer; background-color: #ADD8E6; }
+ul.dropdown a:active			{ color: black; }
+ul.dropdown li a					{ display: block; padding: 2px 5px; border-right: 1px solid #333; color: black; }
+ul.dropdown li:last-child a	{ border-right: none; } /* Doesn't work in IE */
+ul.dropdown li.hover,
+ul.dropdown li:hover 			{ background: #F3D673; color: black; position: relative; }
+ul.dropdown li.hover a			{ color: black; }
+/*
+    Top menu level two-----------------------------------------------
+*/
+ul.dropdown ul                      { width: 250px; visibility: hidden; position: absolute; top: 100%; left: 0; }
+ul.dropdown ul li                   { font-weight: normal; background: #f6f6f6; color: #000;  border-bottom: 1px solid #ccc; float: none; }
+
+                                    /* IE 6 & 7 Needs Inline Block */
+ul.dropdown ul li a                 { border-right: none; width: 200px; display: inline-block; }
+/*
+   Top menu level  three---------------------------------------------
+*/
+ul.dropdown ul ul                   { left: 100%; top: 0; }
+ul.dropdown li:hover > ul           { visibility: visible; }
+
+/*
+    Top menu map key-------------------------------------------------
+*/
+
+#menubar_map_key a{
+	text-decoration: none;
+	padding: 0 25px 0 25px;
+	color: #000000;
+	background-color:#CAE1FF;
+	cursor:pointer;
+	opacity: 0.50;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	filter: alpha(opacity=50);
+}
+
+#menubar_map_key span{
+	text-decoration: none;
+	padding: 0 25px 0 25px;
+	color: #000000;
+	background-color:#CAE1FF;
+	font-weight: bold;
+	cursor:default;
+	opacity: 0.80;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=80)";
+	filter: alpha(opacity=80);
+}
+
+#menubar_map_key a:hover {
+	color: #990000;
+	opacity: 0.65;
+	-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=65)";
+	filter: alpha(opacity=65);
+}
+
+
+
+
+.modal-background {
+    display: none; /* Hide the modal by default */
+    position: fixed; /* Make the modal fixed in place */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    z-index: 10; /* Display the modal on top of other content */
+  }
+
+  /* Style for the modal content */
+  .modal-content {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: white;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0px 0px 10px #000000;
+	z-index: 11; /* Display the modal content on top of the background */
+  }
+
+#close-btn {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	cursor: pointer;
+}
+
+#dialog-box {
+	position: fixed;
+	/* top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%); */
+	top: 25%;
+	left: 25%;
+	transform: none;
+	background-color: white;
+	padding: 20px;
+	border: 1px solid black;
+	box-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+	z-index: 9999;
+	display: none;
+}
+
+#dialog-box img {
+	max-width: 100%;
+	height: auto;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
