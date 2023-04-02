@@ -221,3 +221,25 @@ ul.dropdown li:hover > ul           { visibility: visible; }
   margin: 0 auto;
   margin-bottom: 20px;
 }
+
+#coordinate-text {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	margin: 0 auto;
+	margin-bottom: 30px;
+	position: absolute;
+	bottom: 10px;
+	right: 5px;
+}
+
+#zoom-text {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	margin: 0 auto;
+	margin-bottom: 20px;
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+}

@@ -161,10 +161,9 @@ function checkIfWater(lon,lat){
 }
 
 
-function clickOnMap(map, content, overlay){
+function clickOnMap(content, overlay){
     map.on('singleclick', function (event) {
         var features = map.getFeaturesAtPixel(event.pixel);
-        console.log(features)
         if (features.length && !features[0]['geometryName_']){
             window.alert("You cannot click on land!")
         }
@@ -173,14 +172,12 @@ function clickOnMap(map, content, overlay){
             // const request = new Request('https://api.onwater.io/api/v1/results/'+lonlat[1]+','+lonlat[0]+'?access_token=M6t-gLjKFaE4-wG7JHzT')
             // water = Req(request, layersPoints, lonlat, content, map);
             var coordinate = event.coordinate;
-            console.log(event.pixel)
             lonlat = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
 
             overlay.setPosition(coordinate);
             if (features.length){
                 console.warn("CLIKCED ON POINT")
                 content.innerHTML = formatLonLatMessage(features[features.length-1]['values_']['lonlat'])
-                console.log(features)
                 overlay.setPosition(coordinate);
             }
             else{
@@ -196,7 +193,23 @@ function clickOnMap(map, content, overlay){
         
     // });
 }
-
+function moveOnMap(){
+    map.on('pointermove', function (event) {
+        lonlat = ol.proj.transform(event.coordinate, 'EPSG:3857', 'EPSG:4326');
+        element("coordinate-text").textContent = formatLonLatMessage(lonlat);
+        
+    });
+}
+function wheelOnMap(){
+    map.getViewport().addEventListener('wheel', async function() {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        element("zoom-text").textContent = 'Zoom = ' + map.getView().getZoom();
+    });
+    map.on('dblclick', async function() {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        element("zoom-text").textContent = 'Zoom = ' + map.getView().getZoom();
+    });
+}
 function countNewRoute(){
     routeCounter = (routeCounter + 1) % numberOfRoutes;
     console.log(routeCounter);
@@ -218,7 +231,6 @@ function MarkPositions(lonlat, content, map, layersPositions){
     layersPositions.push(lonlat)
     layersPoints.push(layer)
     map.addLayer(layer);
-    console.log(layersPoints, layersPositions)
     var numberOfPoints = layersPoints.length
     let color;
     if (routeCounter == 0) color = 'red'
@@ -740,7 +752,9 @@ function init(){
         return false;
     };
 
-    clickOnMap(map, content, overlay);
+    clickOnMap(content, overlay);
+    moveOnMap();
+    wheelOnMap();
     const geolocation = new ol.Geolocation({
         // enableHighAccuracy must be set to true to have the heading value.
     trackingOptions: {
