@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.2.2/ol.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.3.0/ol.css">
     <link rel="stylesheet" type="text/css" href="./map_resource.css">
     <style>
       .map {
@@ -10,7 +10,7 @@
         width: 100%;
       }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/ol@v7.2.2/dist/ol.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.3.0/dist/ol.js"></script>
     <script src="functions.js"></script>
     <title>Żegluga</title>
   </head>
@@ -22,10 +22,12 @@
         </div>
     </div>
     <div id="windScale" style="position: absolute; top: 10px; right: 5px; display: none;">
-      <img src="./resources/dialog/WindScale.png">
+      <img src="./resources/dialog/WindScale2.png", height="500px">
+      <input type="range" min="0" max="1" step="0.1" value="1" class="slider" id="transparencySlider" style="position: absolute; bottom: -10px; right:20px;">
     </div>
-    <div id="PrecipationScale" style="position: absolute; bottom: 10px; right: 5px; display: none;">
+    <div id="PrecipationScale" style="position: absolute; top: 10px; right: 150px; display: none;">
       <img src="./resources/dialog/PrecipationScale.png">
+      <input type="range" min="0" max="1" step="0.1" value="1" class="slider" id="transparencySlider2" style="position: absolute; bottom: -10px; right:20px;">
     </div>
     <button onclick="showDialogBox()">Show Dialog Box</button>
 
@@ -54,6 +56,7 @@
             <li><a><input type="checkbox" id="Temperature_map" onclick="javascript:showLayer(layerWeatherTemperature)"><img alt="weather" src="./resources/dialog/AirTemperatureIcon.png" width="24" height="24" border="0"><span id="menu_layer_weather">Temperature (°C)</span></a></li>
             <li><a><input type="checkbox" id="Precipation" onclick="javascript:showLayer(layerWeatherPrecipation)"><img alt="seamarks" src="./resources/dialog/PrecipitationIcon.png" width="22" height="22" border="0"><span id="menu_layer_seamarks">Precipitation</span></a></li>
             <li><a><input type="checkbox" id="checkLayerSeaMarks" onclick="javascript:showLayer(layerSeamarks)"><img alt="seamarks" src="./resources/dialog/layer_seamarks.png" width="22" height="22" border="0"><span id="menu_layer_seamarks">Sea marks</span></a></li>
+            <li><a><input type="checkbox" id="checkLayermarineTraffic" onclick="javascript:showLayer(marineTrafficLayer)"><img alt="seamarks" src="./resources/dialog/ship.png" width="22" height="22" border="0"><span id="menu_layer_seamarks">Other ships</span></a></li>
             <!-- <li onClick="refreshTidalScales();"><a><input type="checkbox" id="checkLayerTidalScale"><img alt="grid" src="./resources/dialog/layer_tidal_scale.png" width="22" height="22" border="0"><span id="menu_layer_tidal_scale">Tidal scale</span></a></li> -->
           </ul>
         </li>
@@ -65,6 +68,8 @@
             <li><a><input type="file" id="fileInput" accept=".txt,.csv," name="file" style="display: block;" onchange="javascript:readFile(event)"><img alt="grid" src="./resources/dialog/layer_route.png" width="22" height="22" border="0"><span id="menu_layer_coordinate_grid">Enter points from file</span></a></li>
             <li><a><input type="checkbox" id="track"><img alt="grid" src="./resources/dialog/layer_grid.png" width="22" height="22" border="0"><span id="menu_layer_coordinate_grid">Track position</span></a></li>
             <li onclick="javascript:saveFile()"><a><input type="file" id="fileOutput" accept=".txt,.csv," name="file" style="display: none;"><img alt="grid" src="./resources/dialog/layer_route.png" width="22" height="22" border="0"><span id="menu_layer_coordinate_grid">Save points to file</span></a></li>
+            <li><a><input type="radio" name="radioGroup" id="option1"> Draw orthodrome (great circle)</a></li>
+            <li><a><input type="radio" name="radioGroup" id="option2" checked="true"> Draw loxodrome (rhumb line)</a></li>
             <!-- <li onclick="javascript:test();"><a><img alt="permalink" src="./resources/dialog/permalink.png" width="22" height="22" border="0"><span id="menu_tools_permalink">Permalink</span></a></li>
             <li onclick="javascript:addMapDownload();"><a><img alt="map_download" src="./resources/dialog/layer_download_map.png" width="22" height="22" border="0"><span id="menu_tools_map_download">Download chart</span></a></li>
             <li onclick="javascript:addNauticalRoute();"><a><img alt="route" src="./resources/dialog/layer_route.png" width="22" height="22" border="0"><span id="menu_tools_trip_planner">Trip planner</span></a></li> -->

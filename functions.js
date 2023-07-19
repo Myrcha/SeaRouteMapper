@@ -11,31 +11,45 @@ let layersLines = [];
 let Route_1 = {
     layersPoints : [],
     layersPositions : [],
-    layersLines :[]
+    layersLines : []
 };
 // Route 2
 let Route_2 = {
     layersPoints : [],
     layersPositions : [],
-    layersLines :[]
+    layersLines : []
 }
 // Route 3 
 let Route_3 = {
     layersPoints : [],
     layersPositions : [],
-    layersLines :[]
+    layersLines : []
 }
 
+let points = [];
 let inputPoints = [];
 let dataFromFile = '';
 let dialogVisible = false;
 let dialog;
 let sealayer;
+let marineTrafficLayer;
 let layerSeamarks;
 let layerWeatherWind;
 let layerWeatherTemperature;
 let layerWeatherPrecipation;
 var weatherTileUrl = "http://weather.openportguide.de/tiles/actual/"
+const projExtent = ol.proj.get('EPSG:3857').getExtent();
+const startResolution = ol.extent.getWidth(projExtent) / 256;
+const resolutions = new Array(22);
+            for (let i = 0; i < resolutions.length; ++i) {
+            resolutions[i] = startResolution / Math.pow(2, i);
+            }
+const tileGrid512 = new ol.tilegrid.TileGrid({
+    extent: projExtent,
+    resolutions: resolutions,
+    tileSize: [512, 512],
+});
+
 
 function element(id) {
     return document.getElementById(id);
@@ -46,7 +60,7 @@ function createLayers(){
     const sealayerKey = 'JsaEDLgBR6Xt7bNTWJcd'
 
     sealayer = new ol.layer.VectorTile({
-        opacity: 0.6,
+        opacity: 0.9,
         source: new ol.source.VectorTile({
             url:
             'https://api.maptiler.com/tiles/land/{z}/{x}/{y}.pbf?key=' + sealayerKey,
@@ -54,6 +68,15 @@ function createLayers(){
             maxZoom: 12,
             format: new ol.format.MVT(),
         }),
+    });
+
+    marineTrafficLayer = new ol.layer.Tile({
+        visible: true,
+        source: new ol.source.XYZ({
+            url: 'https://tiles.marinetraffic.com/ais_helpers/shiptilesingle.aspx?output=png&sat=1&grouping=shiptype&tile_size=512&legends=1&zoom={z}&X={x}&Y={y}',
+            tileGrid: tileGrid512
+        }),
+        visible: false
     });
 
     layerSeamarks = new ol.layer.Tile({
@@ -67,7 +90,8 @@ function createLayers(){
         source: new ol.source.TileImage({
             url: weatherTileUrl +'/wind_stream/0h/{z}/{x}/{y}.png'
             }),
-        visible: false 
+        visible: false,
+        opacity: 1
     });
 
     layerWeatherPressure = new ol.layer.Tile({
@@ -215,6 +239,75 @@ function countNewRoute(){
     console.log(routeCounter);
 }
 
+function midPointFormula(startLonRad, startLatRad, endLonRad, endLatRad) {
+    var deltaLon = endLonRad - startLonRad;
+    var Bx = Math.cos(endLatRad) * Math.cos(deltaLon);
+    var By = Math.cos(endLatRad) * Math.sin(deltaLon);
+    var midLatRad = Math.atan2(
+      Math.sin(startLatRad) + Math.sin(endLatRad),
+      Math.sqrt((Math.cos(startLatRad) + Bx) * (Math.cos(startLatRad) + Bx) + By * By)
+    );
+    var midLonRad = startLonRad + Math.atan2(By, Math.cos(startLatRad) + Bx);
+    console.log(midLatRad,midLonRad);
+    return [midLonRad, midLatRad]
+}
+
+function midpointsInterator(iterCounter, startLonRad, startLatRad, endLonRad, endLatRad){
+    iterCounter +=1
+    var var1,var2,var3,var4;
+    var midLonRad,midLatRad;
+    console.log(iterCounter, startLonRad, startLatRad, endLonRad, endLatRad);
+    [midLonRad, midLatRad] = midPointFormula(startLonRad, startLatRad, endLonRad, endLatRad);
+    console.log(midLonRad, midLatRad);
+    if (iterCounter < 6){
+        [var1, var2] = midpointsInterator(iterCounter, startLonRad, startLatRad, midLonRad, midLatRad);
+        [var3, var4] = midpointsInterator(iterCounter, midLonRad, midLatRad, endLonRad, endLatRad);
+        points.push({ lon: toDegrees(var1), lat: toDegrees(var2) });
+        points.push({ lon: toDegrees(var3), lat: toDegrees(var4) });
+    }
+    console.log(points);
+    return [midLonRad, midLatRad]
+}
+
+function calculateGreatCircleRoute(startLon, startLat, endLon, endLat, style) {
+    
+    // map.removeLayer(layersPoints[0]);
+
+    var startLonRad = toRadians(startLon);
+    var startLatRad = toRadians(startLat);
+    var endLonRad = toRadians(endLon);
+    var endLatRad = toRadians(endLat);
+    points.push({ lon: toDegrees(startLonRad), lat: toDegrees(startLatRad) });
+    midpointsInterator(0, startLonRad, startLatRad, endLonRad, endLatRad)
+    points.push({ lon: toDegrees(endLonRad), lat: toDegrees(endLatRad) });
+    console.log(points)
+
+    points.sort((a, b) => a.lon - b.lon);
+    for (let i = 1; i < points.length; i++) {
+        var line = new ol.geom.LineString([ol.proj.fromLonLat([points[i-1].lon, points[i-1].lat]),ol.proj.fromLonLat([points[i].lon, points[i].lat])])
+        var lineFeature = new ol.Feature({
+            geometry: line
+          });
+        var layer_line = new ol.layer.Vector({
+            source: new ol.source.Vector({
+                features: [lineFeature]
+            })
+        });
+        layer_line.setStyle(style)
+        layersLines.push(layer_line)
+        map.addLayer(layer_line)
+    }
+    points = [];
+}
+
+function toRadians(degrees) {
+return (degrees * Math.PI) / 180;
+}
+  
+function toDegrees(radians) {
+return (radians * 180) / Math.PI;
+}
+
 function MarkPositions(lonlat, content, map, layersPositions){
     var layer = new ol.layer.Vector({
         source: new ol.source.Vector({
@@ -240,23 +333,32 @@ function MarkPositions(lonlat, content, map, layersPositions){
     if(numberOfPoints > 1){
         var style = new ol.style.Style({
             stroke: new ol.style.Stroke({
-              color: color,
-              width: 3
+            color: color,
+            width: 3
             })
-          })
-        var line = new ol.geom.LineString([ol.proj.fromLonLat(layersPositions[numberOfPoints-1]),ol.proj.fromLonLat(layersPositions[numberOfPoints-2])])
-        var lineFeature = new ol.Feature({
-            geometry: line
-          });
-        var layer_line = new ol.layer.Vector({
-            source: new ol.source.Vector({
-                features: [lineFeature]
-            })
-        });
-        console.log(layer_line.getStyle())
-        layer_line.setStyle(style)
-        layersLines.push(layer_line)
-        map.addLayer(layer_line)
+        })
+        console.log(lonlat[0], lonlat[1], layersPositions[numberOfPoints-2][0], layersPositions[numberOfPoints-2][1])
+        if (element("option1").checked){
+            calculateGreatCircleRoute(lonlat[0], lonlat[1], layersPositions[numberOfPoints-2][0], layersPositions[numberOfPoints-2][1], style)
+        }
+        else if (element("option2").checked) {
+            
+            var line = new ol.geom.LineString([ol.proj.fromLonLat(layersPositions[numberOfPoints-1]),ol.proj.fromLonLat(layersPositions[numberOfPoints-2])])
+            var lineFeature = new ol.Feature({
+                geometry: line
+            });
+            var layer_line = new ol.layer.Vector({
+                source: new ol.source.Vector({
+                    features: [lineFeature]
+                })
+            });
+            layer_line.setStyle(style)
+            layersLines.push(layer_line)
+            map.addLayer(layer_line)
+        }
+        else {
+            console.error("One type of route must be checked")
+        }
     }
 }
 
@@ -289,43 +391,55 @@ function RemoveAllPoints(){
             layersLines :[]
         }
     }
+}
 
+function SaveCurrentRoute(){
+    // for loxodrome the number of lines is one less than number of points
+    // for orthodrome the number of lines can be much higher
+    // Looping over lines must be done separetely
     let len = layersPoints.length
     for(var i = 0; i < len; i++) {
 
         if (routeCounter == 0){
             Route_1.layersPoints.push(layersPoints[0]);
             Route_1.layersPositions.push(layersPositions[0])
-            if (i < len - 1) Route_1.layersLines.push(layersLines[0]);
-
         }
         else if (routeCounter == 1) {
             Route_2.layersPoints.push(layersPoints[0]);
             Route_2.layersPositions.push(layersPositions[0])
-            if (i < len - 1) Route_2.layersLines.push(layersLines[0]);
         }
         else if (routeCounter == 2) {
             Route_3.layersPoints.push(layersPoints[0]);
             Route_3.layersPositions.push(layersPositions[0])
-            if (i < len - 1) Route_3.layersLines.push(layersLines[0]);
         }
         
-        console.log(Route_1.layersPoints)
-        console.log(Route_2.layersPoints)
-        console.log(Route_3.layersPoints)
+        // console.log(Route_1.layersPoints)
+        // console.log(Route_2.layersPoints)
+        // console.log(Route_3.layersPoints)
         map.removeLayer(layersPoints[0]);
-        if (i < len - 1) map.removeLayer(layersLines[0])
         layersPoints.shift();
         layersPositions.shift();
+    }
+    let len2 = layersLines.length
+    for(var i = 0; i < len2; i++) {
+        if (routeCounter == 0) Route_1.layersLines.push(layersLines[0]);
+        else if (routeCounter == 1) Route_2.layersLines.push(layersLines[0]);
+        else if (routeCounter == 2) Route_3.layersLines.push(layersLines[0]);
+        map.removeLayer(layersLines[0])
         layersLines.shift()
     }
 }
 
+
 function removeLinesAndPoints(Route){
+    // Same as above
     let len = Route.layersPoints.length
     for(let i = 0; i < len; i++){
         map.removeLayer(Route.layersPoints[i])
-        if (i < len - 1) map.removeLayer(Route.layersLines[i]);
+    }
+    let len2 = Route.layersLines.length
+    for(let i = 0; i < len2; i++){
+        map.removeLayer(Route.layersLines[i])
     }
 }
 
@@ -333,14 +447,15 @@ function addLinesAndPoints(Route){
     let len = Route.layersPoints.length
     for(let i = 0; i < len; i++){
         map.addLayer(Route.layersPoints[i])
-        if (i < len - 1) map.addLayer(Route.layersLines[i]);
+    }
+    let len2 = Route.layersLines.length
+    for(let i = 0; i < len2; i++){
+        map.addLayer(Route.layersLines[i]);
     }
 }
 
 function showLayer(layer){
     let sourceUrl = layer['values_']['source']["key_"]
-    let displayWindScale = "none";
-    let dispalyPrecipationScale = "none";
     if (sourceUrl.includes(weatherTileUrl)){
         console.log(layer.getVisible())
         if(!layer.getVisible()){
@@ -354,7 +469,7 @@ function showLayer(layer){
                 maxZoom: 7
             }));
         }
-        else{
+        else if(!element("Wind_map").checked && !element("Precipation").checked && !element("Pressure_map").checked && !element("Temperature_map").checked){
             map.setView(new ol.View({
                 center: map.getView().getCenter(),
                 zoom: map.getView().getZoom(),
@@ -415,6 +530,8 @@ function formatLonLatMessage(lonlat){
         lon_symbol = 'W°';
         lon = Math.abs(lon);
     }
+    lon = convertDecimalToDMS(lon)
+    lat = convertDecimalToDMS(lat)
     return lat + lat_symbol + ' ' + lon + lon_symbol
 }
 
@@ -666,10 +783,21 @@ function changePointsToString(){
         if (layersPositions[i][0] < 0){
             LongitudeSymbol =  "W";
         }
-        output += Math.abs(layersPositions[i][1]).toString() + LatitudeSymbol + ',' + Math.abs(layersPositions[i][0]).toString() + LongitudeSymbol +'\n'
+        output += convertDecimalToDMS(Math.abs(layersPositions[i][1])).toString() + LatitudeSymbol + ',' + convertDecimalToDMS(Math.abs(layersPositions[i][0])).toString() + LongitudeSymbol +'\n'
     }
     return output
 }
+
+
+function convertDecimalToDMS(decimal) {
+    // Function to convert decimal degrees to degrees minutes seconds
+    var degrees = Math.floor(decimal);
+    var minutesDecimal = (decimal - degrees) * 60;
+    var minutes = Math.floor(minutesDecimal);
+    var seconds = (minutesDecimal - minutes) * 60;
+  
+    return degrees + "° " + minutes + "' " + seconds.toFixed(2) + "\"";
+  }
 
 /*  WATER API
     function Req(request, layersPoints, lonlat, content, map){
@@ -724,6 +852,7 @@ function init(){
                 source: new ol.source.OSM()
             }),
             sealayer,
+            marineTrafficLayer,
             layerSeamarks,
             layerWeatherWind,
             layerWeatherPressure,
@@ -819,9 +948,19 @@ function init(){
     // });
     element('New_route').addEventListener('click', function(){
         RemoveAllPoints()
+        SaveCurrentRoute()
         content.innerHTML = ''
         countNewRoute()
     });
-    
+
+    element('transparencySlider').addEventListener('input', function () {
+        var opacity = parseFloat(element('transparencySlider').value);
+        layerWeatherWind.setOpacity(opacity);
+    });
+
+    element('transparencySlider2').addEventListener('input', function () {
+        var opacity = parseFloat(element('transparencySlider2').value);
+        layerWeatherPrecipation.setOpacity(opacity);
+    });
 
 }
