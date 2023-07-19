@@ -43,11 +43,6 @@
 	</div>
     <div id="topmenu" style="position:absolute; top:10px; left:60px;">
       <ul class="dropdown">
-        <!-- <li>
-          <a href="https://github.com/OpenNauticalChart" target="blank">
-            <img alt="ONCLogo" width="24" height="24" border="0">
-          </a>
-        </li> -->
         <li>
           <a><img alt="view" src="./resources/dialog/view.png" width="22" height="22" border="0"><span id="menu_view">View</span></a>
           <ul class="sub_menu">
@@ -57,7 +52,6 @@
             <li><a><input type="checkbox" id="Precipation" onclick="javascript:showLayer(layerWeatherPrecipation)"><img alt="seamarks" src="./resources/dialog/PrecipitationIcon.png" width="22" height="22" border="0"><span id="menu_layer_seamarks">Precipitation</span></a></li>
             <li><a><input type="checkbox" id="checkLayerSeaMarks" onclick="javascript:showLayer(layerSeamarks)"><img alt="seamarks" src="./resources/dialog/layer_seamarks.png" width="22" height="22" border="0"><span id="menu_layer_seamarks">Sea marks</span></a></li>
             <li><a><input type="checkbox" id="checkLayermarineTraffic" onclick="javascript:showLayer(marineTrafficLayer)"><img alt="seamarks" src="./resources/dialog/ship.png" width="22" height="22" border="0"><span id="menu_layer_seamarks">Other ships</span></a></li>
-            <!-- <li onClick="refreshTidalScales();"><a><input type="checkbox" id="checkLayerTidalScale"><img alt="grid" src="./resources/dialog/layer_tidal_scale.png" width="22" height="22" border="0"><span id="menu_layer_tidal_scale">Tidal scale</span></a></li> -->
           </ul>
         </li>
         <li>
@@ -70,30 +64,25 @@
             <li onclick="javascript:saveFile()"><a><input type="file" id="fileOutput" accept=".txt,.csv," name="file" style="display: none;"><img alt="grid" src="./resources/dialog/layer_route.png" width="22" height="22" border="0"><span id="menu_layer_coordinate_grid">Save points to file</span></a></li>
             <li><a><input type="radio" name="radioGroup" id="option1"> Draw orthodrome (great circle)</a></li>
             <li><a><input type="radio" name="radioGroup" id="option2" checked="true"> Draw loxodrome (rhumb line)</a></li>
-            <!-- <li onclick="javascript:test();"><a><img alt="permalink" src="./resources/dialog/permalink.png" width="22" height="22" border="0"><span id="menu_tools_permalink">Permalink</span></a></li>
-            <li onclick="javascript:addMapDownload();"><a><img alt="map_download" src="./resources/dialog/layer_download_map.png" width="22" height="22" border="0"><span id="menu_tools_map_download">Download chart</span></a></li>
-            <li onclick="javascript:addNauticalRoute();"><a><img alt="route" src="./resources/dialog/layer_route.png" width="22" height="22" border="0"><span id="menu_tools_trip_planner">Trip planner</span></a></li> -->
           </ul>
         </li>
         <li>
           <a><img alt="Help" src="./resources/dialog/help.png" width="22" height="22" border="0"><span id="menu_help">Help</span></a>
           <ul class="sub_menu">
-            <!-- <li onclick="javascript:showDialog()"><a><img alt="grid" src="./resources/dialog/layer_route.png" width="22" height="22" border="0"><span id="menu_layer_coordinate_grid">Enter points</span></a></li> -->
             <li onclick="javascript:showMapKey()"><a><img alt="grid" src="./resources/dialog/map_key.png" width="22" height="22" border="0"><span id="menu_layer_coordinate_grid">Map key</span></a></li>
-            <!-- <li onclick="javascript:showActionDialog(localize('%license', 'License'), loadFile('./dialog_pages/main_license/main_license_' + localize('%locale', 'en') + '.html', 'txt'));"><a><img alt="CC by SA" src="./resources/dialog/Cc-sa-32px.png" width="22" height="22" border="0"><span id="menu_help_license">License</span></a></li> -->
-            <!-- <li onclick="javascript:showActionDialog(localize('%map_key', 'Map key'), loadFile('./dialog_pages/map_key/map_key_sea_marks_' + localize('%locale', 'en') + '.html', 'txt'));"><a><img alt="Map key" src="./resources/dialog/map_key.png" width="22" height="22" border="0"><span id="menu_help_map_key">Map key</span></a></li> -->
-            <!-- <li><a href="https://forum.opennauticalchart.org/index.php" target="blank"><img alt="info" src="./resources/dialog/forum.png" width="22" height="22" border="0"><span id="menu_help_forum">Forum</span></a></li> -->
-            <!-- <li><a href="https://github.com/OpenNauticalChart/online_map/issues?state=open" target="blank"><img alt="info" src="./resources/dialog/report_bugs.png" width="22" height="22" border="0"><span id="menu_help_report_bugs">Report bugs</span></a></li> -->
-            <!-- <li onclick="javascript:showActionDialog(localize('%about', 'About'),  localize('%about_dialog', 'About'));"><a><img alt="info" src="./resources/dialog/info.png" width="22" height="22" border="0"><span id="menu_help_about">About</span></a></li> -->
           </ul>
         </li>
         <li>
-          <a><img alt="Help" src="./resources/dialog/layer_route.png" width="22" height="22" border="0"><span id="menu_routes">Show routes</span></a>
+          <a><img alt="Route" src="./resources/dialog/layer_route.png" width="22" height="22" border="0"><span id="menu_routes">Show routes</span></a>
           <ul class="sub_menu">
             <li id="New_route"><a>Save and start new route</a></li>
             <li><a><input type="checkbox" id="Show_route_1" onclick="javascript:showRoutes(this)">Show route 1</span></a></li>
             <li><a><input type="checkbox" id="Show_route_2" onclick="javascript:showRoutes(this)">Show route 2</span></a></li>
             <li><a><input type="checkbox" id="Show_route_3" onclick="javascript:showRoutes(this)">Show route 3</span></a></li>
+          </ul>
+        </li>
+        <li>
+          <a href="https://github.com/Myrcha/SeaRouteMapper" style="display: inline-block; text-align: center; text-decoration: none; border: 1px solid #fff;"> Source code </a>
         </li>
       </ul>
     </div>

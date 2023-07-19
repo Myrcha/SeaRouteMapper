@@ -363,7 +363,7 @@ function MarkPositions(lonlat, content, map, layersPositions){
 }
 
 function RemoveAllPoints(){
-
+    // Clearing all Routes
     if (routeCounter == 0){
         removeLinesAndPoints(Route_1)
         element("Show_route_1").checked = false;
@@ -391,9 +391,8 @@ function RemoveAllPoints(){
             layersLines :[]
         }
     }
-}
-
-function SaveCurrentRoute(){
+    // Saving operands to current route and clearing operands
+    
     // for loxodrome the number of lines is one less than number of points
     // for orthodrome the number of lines can be much higher
     // Looping over lines must be done separetely
@@ -933,6 +932,15 @@ function init(){
     });
     map.addLayer(geolayer)
 
+    var scaleLineControl = new ol.control.ScaleLine({
+        units: 'metric', // Display the scale in kilometers
+        bar: true, // Show the scale bar
+        steps: 4, // Number of steps in the scale line
+        text: false, // Show text on the scale bar
+        minWidth: 100 // Minimum width of the scale bar in pixels
+      });
+      map.addControl(scaleLineControl);
+
     element('track').addEventListener('change', function () {
         geolocation.setTracking(this.checked);
         geolayer.setVisible(this.checked)
@@ -948,7 +956,6 @@ function init(){
     // });
     element('New_route').addEventListener('click', function(){
         RemoveAllPoints()
-        SaveCurrentRoute()
         content.innerHTML = ''
         countNewRoute()
     });
