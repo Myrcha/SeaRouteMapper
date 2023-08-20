@@ -225,21 +225,21 @@ function createLayers(){
         "12h" : layerWeatherWind12h,
         "24h" : layerWeatherWind24h
     };
-    
+
     weatherPressureLayers = {
         "0h" : layerWeatherPressure0h,
         "6h" : layerWeatherPressure6h,
         "12h" : layerWeatherPressure12h,
         "24h" : layerWeatherPressure24h
     };
-    
+
     weatherTemperatureLayers = {
         "0h" : layerWeatherTemperature0h,
         "6h" : layerWeatherTemperature6h,
         "12h" : layerWeatherTemperature12h,
         "24h" : layerWeatherTemperature24h
     };
-    
+
     weatherPrecipationLayers = {
         "0h" : layerWeatherPrecipation0h,
         "6h" : layerWeatherPrecipation6h,
@@ -344,9 +344,6 @@ function clickOnMap(content, overlay){
             
         }
     });
-    // map.on('dblclick', function (event) {
-        
-    // });
 }
 function moveOnMap(){
     map.on('pointermove', function (event) {
@@ -396,9 +393,6 @@ function midpointsInterator(iterCounter, startLonRad, startLatRad, endLonRad, en
 }
 
 function calculateGreatCircleRoute(startLon, startLat, endLon, endLat, style) {
-    
-    // map.removeLayer(layersPoints[0]);
-
     var startLonRad = toRadians(startLon);
     var startLatRad = toRadians(startLat);
     var endLonRad = toRadians(endLon);
@@ -425,11 +419,11 @@ function calculateGreatCircleRoute(startLon, startLat, endLon, endLat, style) {
 }
 
 function toRadians(degrees) {
-return (degrees * Math.PI) / 180;
+    return (degrees * Math.PI) / 180;
 }
   
 function toDegrees(radians) {
-return (radians * 180) / Math.PI;
+    return (radians * 180) / Math.PI;
 }
 
 function MarkPositions(lonlat, content, map, layersPositions){
@@ -515,7 +509,6 @@ function RemoveAllPoints(){
         };
     }
     // Saving operands to current route and clearing operands
-    
     // for loxodrome the number of lines is one less than number of points
     // for orthodrome the number of lines can be much higher
     // Looping over lines must be done separetely
@@ -663,8 +656,7 @@ function validateInputs(latitude, longitude, NS, EW){
 function showDialog() {
     element('popup-content').innerHTML = '';
     RemoveAllPoints();
-    
-    
+
     if (dialogVisible){
         dialogVisible = false;
         dialog.remove();
@@ -679,12 +671,11 @@ function showDialog() {
     dialog.style.backgroundColor = "white";
     dialog.style.padding = "20px";
     dialog.style.border = "1px solid black";
-    
 
     let inputIndex = 0;
-    
+
     document.body.appendChild(dialog);
-    
+
     inputPoints = [];
 
     // Input N or S value
@@ -706,7 +697,6 @@ function showDialog() {
         selectNS.add(optionN);
         selectNS.add(optionS);
     dialog.appendChild(selectNS);
-        // mySelect.add(option1);
 
     // Input E or W value
     let input2 = document.createElement("input");
@@ -802,34 +792,6 @@ function readFile(event) {
     else {
         console.error("Missing file");
     }
-    
-    // const filePromise = new Promise((resolve, reject) => {
-    //     fileInput.addEventListener("change", (event) => {
-    //         console.log(event.target.id);
-    //       const file = event.target.files[0];
-    //       if (file) {
-    //         const reader = new FileReader();
-    
-    //         reader.addEventListener("load", (event) => {
-    //           resolve(event.target.result);
-    //         });
-    
-    //         reader.readAsText(file);
-    //       } else {
-    //         reject("No file selected.");
-    //       }
-    //     });
-    //   })
-    //   filePromise.then((fileContents) => {
-    //     dataFromFile = fileContents
-    //     console.log(dataFromFile);
-    //     changeStringToPoints(dataFromFile)
-        
-    //     // Do something with the file contents here.
-    //   }).catch((error) => {
-    //     console.error(error);
-    //   });
-    //   element("fileInput").click("aa");
 }
 
 function saveFile(){
@@ -899,7 +861,7 @@ function convertDecimalToDMS(decimal) {
     var minutesDecimal = (decimal - degrees) * 60;
     var minutes = Math.floor(minutesDecimal);
     var seconds = (minutesDecimal - minutes) * 60;
-  
+
     return degrees + "° " + minutes + "' " + seconds.toFixed(2) + "\"";
   }
 
@@ -945,7 +907,6 @@ function convertDMSToDecimal(DMS) {
 */
 
 function init(){
-    
     createLayers();
 
     const view = new ol.View({
