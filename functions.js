@@ -1,4 +1,3 @@
-import {ol} from "ol.js";
 let lonlat = 0;
 let numberOfRoutes = 3;
 let routeCounter = 0;
