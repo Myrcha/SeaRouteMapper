@@ -26,6 +26,7 @@ let Route_3 = {
     layersLines : []
 }
 
+let weatherForecastTime = '0h';
 let points = [];
 let inputPoints = [];
 let dataFromFile = '';
@@ -33,10 +34,6 @@ let dialogVisible = false;
 let dialog;
 let sealayer;
 let marineTrafficLayer;
-let layerSeamarks;
-let layerWeatherWind;
-let layerWeatherTemperature;
-let layerWeatherPrecipation;
 var weatherTileUrl = "http://weather.openportguide.de/tiles/actual/"
 const projExtent = ol.proj.get('EPSG:3857').getExtent();
 const startResolution = ol.extent.getWidth(projExtent) / 256;
@@ -86,7 +83,7 @@ function createLayers(){
         visible: false
     });
 
-    layerWeatherWind = new ol.layer.Tile({
+    layerWeatherWind0h = new ol.layer.Tile({
         source: new ol.source.TileImage({
             url: weatherTileUrl +'/wind_stream/0h/{z}/{x}/{y}.png'
             }),
@@ -94,26 +91,143 @@ function createLayers(){
         opacity: 1
     });
 
-    layerWeatherPressure = new ol.layer.Tile({
+    layerWeatherWind6h = new ol.layer.Tile({
+        source: new ol.source.TileImage({
+            url: weatherTileUrl +'/wind_stream/6h/{z}/{x}/{y}.png'
+            }),
+        visible: false,
+        opacity: 1
+    });
+
+    layerWeatherWind12h = new ol.layer.Tile({
+        source: new ol.source.TileImage({
+            url: weatherTileUrl +'/wind_stream/12h/{z}/{x}/{y}.png'
+            }),
+        visible: false,
+        opacity: 1
+    });
+
+    layerWeatherWind24h = new ol.layer.Tile({
+        source: new ol.source.TileImage({
+            url: weatherTileUrl +'/wind_stream/24h/{z}/{x}/{y}.png'
+            }),
+        visible: false,
+        opacity: 1
+    });
+
+    layerWeatherPressure0h = new ol.layer.Tile({
         source: new ol.source.TileImage({
             url: weatherTileUrl +'/surface_pressure/0h/{z}/{x}/{y}.png'
             }),
         visible: false 
     });
 
-    layerWeatherTemperature = new ol.layer.Tile({
+    layerWeatherPressure6h = new ol.layer.Tile({
+        source: new ol.source.TileImage({
+            url: weatherTileUrl +'/surface_pressure/6h/{z}/{x}/{y}.png'
+            }),
+        visible: false 
+    });
+
+    layerWeatherPressure12h = new ol.layer.Tile({
+        source: new ol.source.TileImage({
+            url: weatherTileUrl +'/surface_pressure/12h/{z}/{x}/{y}.png'
+            }),
+        visible: false 
+    });
+
+    layerWeatherPressure24h = new ol.layer.Tile({
+        source: new ol.source.TileImage({
+            url: weatherTileUrl +'/surface_pressure/24h/{z}/{x}/{y}.png'
+            }),
+        visible: false 
+    });
+
+    layerWeatherTemperature0h = new ol.layer.Tile({
         source: new ol.source.TileImage({
             url: weatherTileUrl +'/air_temperature/0h/{z}/{x}/{y}.png'
             }),
         visible: false 
     });
 
-    layerWeatherPrecipation = new ol.layer.Tile({
+    layerWeatherTemperature6h = new ol.layer.Tile({
+        source: new ol.source.TileImage({
+            url: weatherTileUrl +'/air_temperature/6h/{z}/{x}/{y}.png'
+            }),
+        visible: false 
+    });
+
+    layerWeatherTemperature12h = new ol.layer.Tile({
+        source: new ol.source.TileImage({
+            url: weatherTileUrl +'/air_temperature/12h/{z}/{x}/{y}.png'
+            }),
+        visible: false 
+    });
+
+    layerWeatherTemperature24h = new ol.layer.Tile({
+        source: new ol.source.TileImage({
+            url: weatherTileUrl +'/air_temperature/24h/{z}/{x}/{y}.png'
+            }),
+        visible: false 
+    });
+
+    layerWeatherPrecipation0h = new ol.layer.Tile({
         source: new ol.source.TileImage({
             url: weatherTileUrl +'/precipitation/0h/{z}/{x}/{y}.png'
             }),
         visible: false 
     });
+
+    layerWeatherPrecipation6h = new ol.layer.Tile({
+        source: new ol.source.TileImage({
+            url: weatherTileUrl +'/precipitation/6h/{z}/{x}/{y}.png'
+            }),
+        visible: false 
+    });
+
+    layerWeatherPrecipation12h = new ol.layer.Tile({
+        source: new ol.source.TileImage({
+            url: weatherTileUrl +'/precipitation/12h/{z}/{x}/{y}.png'
+            }),
+        visible: false 
+    });
+
+    layerWeatherPrecipation24h = new ol.layer.Tile({
+        source: new ol.source.TileImage({
+            url: weatherTileUrl +'/precipitation/24h/{z}/{x}/{y}.png'
+            }),
+        visible: false 
+    });
+
+    weatherWindLayers = {
+        "0h" : layerWeatherWind0h,
+        "6h" : layerWeatherWind6h,
+        "12h" : layerWeatherWind12h,
+        "24h" : layerWeatherWind24h
+    };
+    
+    weatherPressureLayers = {
+        "0h" : layerWeatherPressure0h,
+        "6h" : layerWeatherPressure6h,
+        "12h" : layerWeatherPressure12h,
+        "24h" : layerWeatherPressure24h
+    };
+    
+    weatherTemperatureLayers = {
+        "0h" : layerWeatherTemperature0h,
+        "6h" : layerWeatherTemperature6h,
+        "12h" : layerWeatherTemperature12h,
+        "24h" : layerWeatherTemperature24h
+    };
+    
+    weatherPrecipationLayers = {
+        "0h" : layerWeatherPrecipation0h,
+        "6h" : layerWeatherPrecipation6h,
+        "12h" : layerWeatherPrecipation12h,
+        "24h" : layerWeatherPrecipation24h
+    };
+
+    weatherLayers = [weatherWindLayers, weatherPressureLayers, weatherTemperatureLayers, weatherPrecipationLayers];
 }
 
 function showMapKey() {
@@ -128,56 +242,53 @@ function loadImage(imgPath) {
     document.getElementById("dialog-img").src = imgPath;
 }
 
-function calculate_route(geolocation, map, sealayer){
-    currentPosition = geolocation.getPosition();
-    // currentPosition = [19.240795054589547, 54.44377441445792];
-    if (!currentPosition) {
-        console.log("Cannot get current position");
-    }
-    else {
-        currentPosition = ol.proj.transform(currentPosition, 'EPSG:3857', 'EPSG:4326');
-        // MUST BE 2 POINTS
-        if (lonlat==0){
-            console.log("Please mark your destination")
-        }
-        else{
-            calc(currentPosition, map)
-        }
-    }
-}
+// function calculate_route(geolocation, map, sealayer){
+//     currentPosition = geolocation.getPosition();
+//     // currentPosition = [19.240795054589547, 54.44377441445792];
+//     if (!currentPosition) {
+//         console.log("Cannot get current position");
+//     }
+//     else {
+//         currentPosition = ol.proj.transform(currentPosition, 'EPSG:3857', 'EPSG:4326');
+//         // MUST BE 2 POINTS
+//         if (lonlat==0){
+//             console.log("Please mark your destination")
+//         }
+//         else{
+//             calc(currentPosition, map)
+//         }
+//     }
+// }
 
-function calc(currentPosition, map){
-    var arr = [];
-    current_lon = currentPosition[0];
-    current_lat = currentPosition[1];
-    finish_lon = lonlat[0]
-    finish_lat = lonlat[1]
-    console.log(finish_lon)
-    console.log(finish_lat)
-    step = 10
-    var step_lon = (current_lon - finish_lon) / step;
-    var step_lat = (current_lat - finish_lat) / step;
-    // OM EPSG 3857
-    currentPosition = ol.proj.transform(currentPosition, 'EPSG:4326', 'EPSG:3857');
-    for (var i = 0; i <= step; i++) {
-        var help_arr = []
-        lon = current_lon - step_lon * i
-        for (var j = 0; j <= step; j++) {
-            lat = current_lat - step_lat * j
-            help_arr[j] = checkIfWater(lon, lat)
-        }
-        // console.log(help_arr)
-        arr.splice(i, 0, help_arr)
-    }
-    console.log(arr);
-}
+// function calc(currentPosition, map){
+//     var arr = [];
+//     current_lon = currentPosition[0];
+//     current_lat = currentPosition[1];
+//     finish_lon = lonlat[0]
+//     finish_lat = lonlat[1]
+//     console.log(finish_lon)
+//     console.log(finish_lat)
+//     step = 10
+//     var step_lon = (current_lon - finish_lon) / step;
+//     var step_lat = (current_lat - finish_lat) / step;
+//     // OM EPSG 3857
+//     currentPosition = ol.proj.transform(currentPosition, 'EPSG:4326', 'EPSG:3857');
+//     for (var i = 0; i <= step; i++) {
+//         var help_arr = []
+//         lon = current_lon - step_lon * i
+//         for (var j = 0; j <= step; j++) {
+//             lat = current_lat - step_lat * j
+//             help_arr[j] = checkIfWater(lon, lat)
+//         }
+//         // console.log(help_arr)
+//         arr.splice(i, 0, help_arr)
+//     }
+//     console.log(arr);
+// }
 
 function checkIfWater(lon,lat){
-    // console.log(lon,lat)
     currentPosition = ol.proj.transform([lon,lat], 'EPSG:4326', 'EPSG:3857');
-    console.log(map.getPixelFromCoordinate(currentPosition))
     var feature = map.getFeaturesAtPixel(map.getPixelFromCoordinate(currentPosition));
-    console.log(feature.length && !feature[0]['geometryName_']);
         if (!(feature.length && !feature[0]['geometryName_'])){
             return true
         }
@@ -236,7 +347,6 @@ function wheelOnMap(){
 }
 function countNewRoute(){
     routeCounter = (routeCounter + 1) % numberOfRoutes;
-    console.log(routeCounter);
 }
 
 function midPointFormula(startLonRad, startLatRad, endLonRad, endLatRad) {
@@ -248,7 +358,6 @@ function midPointFormula(startLonRad, startLatRad, endLonRad, endLatRad) {
       Math.sqrt((Math.cos(startLatRad) + Bx) * (Math.cos(startLatRad) + Bx) + By * By)
     );
     var midLonRad = startLonRad + Math.atan2(By, Math.cos(startLatRad) + Bx);
-    console.log(midLatRad,midLonRad);
     return [midLonRad, midLatRad]
 }
 
@@ -256,16 +365,13 @@ function midpointsInterator(iterCounter, startLonRad, startLatRad, endLonRad, en
     iterCounter +=1
     var var1,var2,var3,var4;
     var midLonRad,midLatRad;
-    console.log(iterCounter, startLonRad, startLatRad, endLonRad, endLatRad);
     [midLonRad, midLatRad] = midPointFormula(startLonRad, startLatRad, endLonRad, endLatRad);
-    console.log(midLonRad, midLatRad);
     if (iterCounter < 6){
         [var1, var2] = midpointsInterator(iterCounter, startLonRad, startLatRad, midLonRad, midLatRad);
         [var3, var4] = midpointsInterator(iterCounter, midLonRad, midLatRad, endLonRad, endLatRad);
         points.push({ lon: toDegrees(var1), lat: toDegrees(var2) });
         points.push({ lon: toDegrees(var3), lat: toDegrees(var4) });
     }
-    console.log(points);
     return [midLonRad, midLatRad]
 }
 
@@ -280,7 +386,6 @@ function calculateGreatCircleRoute(startLon, startLat, endLon, endLat, style) {
     points.push({ lon: toDegrees(startLonRad), lat: toDegrees(startLatRad) });
     midpointsInterator(0, startLonRad, startLatRad, endLonRad, endLatRad)
     points.push({ lon: toDegrees(endLonRad), lat: toDegrees(endLatRad) });
-    console.log(points)
 
     points.sort((a, b) => a.lon - b.lon);
     for (let i = 1; i < points.length; i++) {
@@ -337,7 +442,6 @@ function MarkPositions(lonlat, content, map, layersPositions){
             width: 3
             })
         })
-        console.log(lonlat[0], lonlat[1], layersPositions[numberOfPoints-2][0], layersPositions[numberOfPoints-2][1])
         if (element("option1").checked){
             calculateGreatCircleRoute(lonlat[0], lonlat[1], layersPositions[numberOfPoints-2][0], layersPositions[numberOfPoints-2][1], style)
         }
@@ -412,9 +516,6 @@ function RemoveAllPoints(){
             Route_3.layersPositions.push(layersPositions[0])
         }
         
-        // console.log(Route_1.layersPoints)
-        // console.log(Route_2.layersPoints)
-        // console.log(Route_3.layersPoints)
         map.removeLayer(layersPoints[0]);
         layersPoints.shift();
         layersPositions.shift();
@@ -454,9 +555,9 @@ function addLinesAndPoints(Route){
 }
 
 function showLayer(layer){
+    if (weatherForecastTime in layer) layer = layer[weatherForecastTime];
     let sourceUrl = layer['values_']['source']["key_"]
     if (sourceUrl.includes(weatherTileUrl)){
-        console.log(layer.getVisible())
         if(!layer.getVisible()){
             let zoom = map.getView().getZoom();
             if (map.getView().getZoom() > 7){
@@ -497,7 +598,6 @@ function showLayer(layer){
 
 
 function showRoutes(routeCheckbox){
-    console.log(routeCheckbox.checked)
     if (routeCheckbox.id == "Show_route_1")
     {
         if (routeCheckbox.checked) addLinesAndPoints(Route_1)
@@ -517,16 +617,16 @@ function showRoutes(routeCheckbox){
 
 
 function formatLonLatMessage(lonlat){
-    let lat_symbol = 'N°';
-    let lon_symbol = 'E°';
+    let lat_symbol = 'N';
+    let lon_symbol = 'E';
     let lon = lonlat[0]
     let lat = lonlat[1]
     if (lat < 0){
-        lat_symbol = 'S°';
+        lat_symbol = 'S';
         lat = Math.abs(lat);
     }
     if (lon < 0){
-        lon_symbol = 'W°';
+        lon_symbol = 'W';
         lon = Math.abs(lon);
     }
     lon = convertDecimalToDMS(lon)
@@ -535,10 +635,8 @@ function formatLonLatMessage(lonlat){
 }
 
 function validateInputs(latitude, longitude, NS, EW){
-    let lat = parseFloat(latitude)
-    // console.log(lat)
-    let lon = parseFloat(longitude)
-    // console.log(lon)
+    let lat = parseFloat(convertDMSToDecimal(latitude));
+    let lon = parseFloat(convertDMSToDecimal(longitude));
     if (NS == 'S') {lat = -lat};
     if (EW == 'W') {lon = -lon};
     return [lon, lat]
@@ -623,7 +721,6 @@ function showDialog() {
         let lat = lonlat[1]
         if (!isNaN(lon) && !isNaN(lat)){
             inputPoints.push([lon, lat]);
-            console.log(inputPoints)
             for (let i = 0; i < inputPoints.length; i++)
             {
                 MarkPositions(inputPoints[i], element('popup-content'), map, layersPositions)
@@ -682,7 +779,6 @@ function readFile(event) {
         console.error("File is empty")
       }
     };
-    console.log("AA")
     if(input.files[0]){
         reader.readAsText(input.files[0])
     }
@@ -738,11 +834,9 @@ async function changeStringToPoints(coordinatesFromFile){
     element('popup-content').innerHTML = ''
 
     for (var i = 0; i < point_info.length; i++) {
-        console.log(point_info[i])
         if (point_info[i] == '') continue;
-        var point_info_separated = point_info[i].flatMap(str => str.match(/(\d+(\.\d+)?|[NSEW])/g));
+        var point_info_separated = point_info[i].flatMap(str => str.match(/(\d+\°?\s?\d+\'?\s?\d+.\d+\"?)|(\d+(\.\d+)?)|([NSEW])/g));
         var lonlat = validateInputs(point_info_separated[0],point_info_separated[2],point_info_separated[1],point_info_separated[3])
-        console.log(lonlat);
         if (i == 0){
             map.setView(new ol.View({
                 center: ol.proj.fromLonLat([lonlat[0], lonlat[1]]),
@@ -753,7 +847,6 @@ async function changeStringToPoints(coordinatesFromFile){
             await new Promise(resolve => setTimeout(resolve, timeoutInMiliseconds));
         }
         var water = checkIfWater(lonlat[0], lonlat[1]);
-        console.log(water);
         if(!isNaN(lonlat[0]) && !isNaN(lonlat[1]) && water){
             MarkPositions(lonlat, element('popup-content'), map, layersPositions)
         }
@@ -761,10 +854,6 @@ async function changeStringToPoints(coordinatesFromFile){
     }
     if (waterFlag) window.alert("Some of your points were placed on the land. Please fix that");
     element('popup-content').innerHTML = ''
-    // var point_info = inputString.split(/([NSEW])/);
-    // console.log(cooridantes)
-    // validateInputs
-    // console.log(items);
 }
 
 function changePointsToString(){
@@ -775,7 +864,6 @@ function changePointsToString(){
     for (var i = 0; i < layersPositions.length; i++) {
         var LatitudeSymbol = "N";
         var LongitudeSymbol = "E";
-        console.log(layersPositions[i]);
         if (layersPositions[i][1] < 0){
             LatitudeSymbol =  "S";
         }
@@ -797,6 +885,16 @@ function convertDecimalToDMS(decimal) {
   
     return degrees + "° " + minutes + "' " + seconds.toFixed(2) + "\"";
   }
+
+function convertDMSToDecimal(DMS) {
+    // Function to convert degrees minutes seconds to decimal
+    DMS = DMS.replace(/["'°]/g, '');
+    var parts = DMS.split(/\s/,3);
+    var degrees = parts[0] ? parseFloat(parts[0]) : 0;
+    var minutes = parts[1] ? parseFloat(parts[1]) : 0;
+    var seconds = parts[2] ? parseFloat(parts[2]) : 0;
+    return (degrees + minutes/60 + seconds/(60*60));
+}
 
 /*  WATER API
     function Req(request, layersPoints, lonlat, content, map){
@@ -829,10 +927,6 @@ function convertDecimalToDMS(decimal) {
     }
 */
 
-function test(){
-    console.log("TEST")
-}
-
 function init(){
     
     createLayers()
@@ -853,10 +947,22 @@ function init(){
             sealayer,
             marineTrafficLayer,
             layerSeamarks,
-            layerWeatherWind,
-            layerWeatherPressure,
-            layerWeatherTemperature,
-            layerWeatherPrecipation
+            weatherWindLayers["0h"],
+            weatherWindLayers["6h"],
+            weatherWindLayers["12h"],
+            weatherWindLayers["24h"],
+            weatherPressureLayers["0h"],
+            weatherPressureLayers["6h"],
+            weatherPressureLayers["12h"],
+            weatherPressureLayers["24h"],
+            weatherTemperatureLayers["0h"],
+            weatherTemperatureLayers["6h"],
+            weatherTemperatureLayers["12h"],
+            weatherTemperatureLayers["24h"],
+            weatherPrecipationLayers["0h"],
+            weatherPrecipationLayers["6h"],
+            weatherPrecipationLayers["12h"],
+            weatherPrecipationLayers["24h"]
         ],
         view: view
     });
@@ -946,9 +1052,9 @@ function init(){
         geolayer.setVisible(this.checked)
     });
     
-    element('calculate_position').addEventListener('click', function(){ 
-        calculate_route(geolocation, layersPositions, map, sealayer)
-    });
+    // element('calculate_position').addEventListener('click', function(){ 
+    //     calculate_route(geolocation, layersPositions, map, sealayer)
+    // });
 
     // element('Mark_points').addEventListener('change', function(){
     //     RemoveAllPoints()
@@ -962,12 +1068,33 @@ function init(){
 
     element('transparencySlider').addEventListener('input', function () {
         var opacity = parseFloat(element('transparencySlider').value);
-        layerWeatherWind.setOpacity(opacity);
+        weatherWindLayers['0h'].setOpacity(opacity);
+        weatherWindLayers['6h'].setOpacity(opacity);
+        weatherWindLayers['12h'].setOpacity(opacity);
+        weatherWindLayers['24h'].setOpacity(opacity);
     });
 
     element('transparencySlider2').addEventListener('input', function () {
         var opacity = parseFloat(element('transparencySlider2').value);
-        layerWeatherPrecipation.setOpacity(opacity);
+        weatherPrecipationLayers['0h'].setOpacity(opacity);
+        weatherPrecipationLayers['6h'].setOpacity(opacity);
+        weatherPrecipationLayers['12h'].setOpacity(opacity);
+        weatherPrecipationLayers['24h'].setOpacity(opacity);
+    });
+
+    const radioButtons = document.querySelectorAll('input[name="weatherForecastTime"]');
+    radioButtons.forEach(function (radioButton) {
+        radioButton.addEventListener("change", function () {
+            weatherForecastTime = document.querySelector('input[name="weatherForecastTime"]:checked').value;
+            weatherLayers.forEach(function (weatherLayer){
+                for (let time in weatherLayer){
+                    if (!(time == weatherForecastTime) && weatherLayer[time].getVisible()){
+                        showLayer(weatherLayer[time]);
+                        showLayer(weatherLayer[weatherForecastTime]);
+                    }
+                }
+            });
+        });
     });
 
 }
