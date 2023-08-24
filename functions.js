@@ -331,7 +331,7 @@ function clickOnMap(content, overlay){
 
             overlay.setPosition(coordinate);
             if (features.length){
-                console.warn("CLIKCED ON POINT");
+                console.warn("CLICKED ON POINT");
                 content.innerHTML = formatLonLatMessage(features[features.length-1].values_.lonlat);
                 overlay.setPosition(coordinate);
             }
@@ -645,6 +645,15 @@ function formatLonLatMessage(lonlat){
 }
 
 function validateInputs(latitude, longitude, NS, EW){
+    if (!latitude && !longitude){
+        return [NaN, NaN];
+    }
+    if (!latitude){
+        return [longitude, NaN];
+    }
+    if (!longitude){
+        return [NaN, latitude];
+    }
     let lat = parseFloat(convertDMSToDecimal(latitude));
     let lon = parseFloat(convertDMSToDecimal(longitude));
     if (NS == 'S') lat = -lat;
