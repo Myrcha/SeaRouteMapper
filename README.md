@@ -139,5 +139,6 @@ There is possibility to turn on tracking your current possition - the event is m
 <p align="center">
   <img src="resources/readme/track-position.png" alt="Weather forecast"/>
 </p>
+
 ### Other
 - If user clicks on the land the warning will be showed - the tool checks if user is not passing not valid data
