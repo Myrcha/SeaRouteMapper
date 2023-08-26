@@ -24,11 +24,10 @@ The weather forecast contains information about wind stream, surface pressure, t
   <img src="resources/readme/weather-forecast.png" alt="Weather forecast"/>
 </p>
 
-[!WARNING]
+:warning:
 All of above layers work with maximal zoom equals 7 - to zoom the map more the user has to uncheck all of the weather layers.
 
-[!NOTE]
-Your note text here
+:information_source:
 For the wind stream and precipitation there is available slider to set the opacity of the layers - to improve the readability of the map.
 
 ### Sea marks
@@ -68,7 +67,7 @@ There is an option to save planned route. The name of the file will be "route.tx
   <img src="resources/readme/save-points-to-file.png" alt="Weather forecast"/>
 </p>
 
-[!NOTE]
+:information_source:
 Example of the "route.txt" file:
 <p align="center">
   <img src="resources/readme/route-image.png" alt="Weather forecast"/>
@@ -81,7 +80,7 @@ User can load csv or txt file. The notation can be decimal or degrees/minutes/se
   <img src="resources/readme/load-file.png" alt="Weather forecast"/>
 </p>
 
-[!NOTE]
+:information_source:
 Examples of files:
 <p align="center">
   <img src="resources/readme/route-image.png" alt="Weather forecast" height="100" width="30%"/> 
@@ -123,7 +122,7 @@ User can save up to three routes which are stored in the memory. Each route has 
 There are tools on the map that help specify the position and distance on the map. A scale at the bottom left helps measure distance between two points. There is also information about coordinates of points pointed by the mouse and current zoom in the bottom right corner
 
 
-[!NOTE]
+:information_source:
 Please keep in mind that the scale resizes automatically even without zooming. The map is the Mercator projection.
 
 <p align="center">
