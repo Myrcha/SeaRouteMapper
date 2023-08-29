@@ -1012,9 +1012,7 @@ function init(){
     });
 
     geolocation.on('error', function (error) {
-        const info = element('info');
-        info.innerHTML = error.message;
-        info.style.display = '';
+        window.alert(error.message);
     });
 
     let geolayer = new ol.layer.Vector({
