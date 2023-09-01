@@ -98,7 +98,7 @@ function createLayers(){
 
     layerSeamarks = new ol.layer.Tile({
         source: new ol.source.XYZ({
-            url: 'http://t1.openseamap.org/seamark/{z}/{x}/{y}.png',
+            url: 'https://t1.openseamap.org/seamark/{z}/{x}/{y}.png',
             }),
         visible: false
     });
