@@ -55,7 +55,7 @@ let weatherPressureLayers;
 let weatherTemperatureLayers;
 let weatherPrecipationLayers;
 let weatherLayers;
-var weatherTileUrl = "http://weather.openportguide.de/tiles/actual/";
+var weatherTileUrl = "https://weather.openportguide.de/tiles/actual/";
 const projExtent = ol.proj.get('EPSG:3857').getExtent();
 const startResolution = ol.extent.getWidth(projExtent) / 256;
 const resolutions = new Array(22);
