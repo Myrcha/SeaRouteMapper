@@ -16,11 +16,11 @@
         </div>
     </div>
     <div id="windScale" style="position: absolute; top: 10px; right: 5px; display: none;">
-      <img src="./resources/dialog/WindScale2.png", height="500px">
+      <img src="./resources/dialog/WindScale2.png" height="500" alt="WidnScale2">
       <input type="range" min="0" max="1" step="0.1" value="1" class="slider" id="transparencySlider" style="position: absolute; bottom: -10px; right:20px;">
     </div>
     <div id="PrecipationScale" style="position: absolute; top: 10px; right: 150px; display: none;">
-      <img src="./resources/dialog/PrecipationScale.png">
+      <img src="./resources/dialog/PrecipationScale.png" alt="PrecipationScale">
       <input type="range" min="0" max="1" step="0.1" value="1" class="slider" id="transparencySlider2" style="position: absolute; bottom: -10px; right:20px;">
     </div>
     <button onclick="showDialogBox()">Show Dialog Box</button>
@@ -38,42 +38,42 @@
     <div id="topmenu" style="position:absolute; top:10px; left:60px;">
       <ul class="dropdown">
         <li>
-          <a><img alt="view" src="./resources/dialog/view.png" width="22" height="22" border="0"><span id="menu_view">View</span></a>
+          <a><img alt="view" src="./resources/dialog/view.png" width="22" height="22"><span id="menu_view">View</span></a>
           <ul class="sub_menu">
-            <li><a><input type="radio" name="weatherForecastTime" value="0h" checked="true"> 0h <input type="radio" name="weatherForecastTime" value="6h"> 6h <input type="radio" name="weatherForecastTime" value="12h"> 12h <input type="radio" name="weatherForecastTime" value="24h"> 24h </a></li>
-            <li><a><input type="checkbox" id="Wind_map" onclick="javascript:showLayer(weatherWindLayers)"><img alt="weather" src="./resources/dialog/WindIcon.png" width="24" height="24" border="0"><span id="menu_layer_weather">Wind stream</span></a></li>
-            <li><a><input type="checkbox" id="Pressure_map" onclick="javascript:showLayer(weatherPressureLayers)"><img alt="weather" src="./resources/dialog/AirPressureIcon.png" width="24" height="24" border="0"><span id="menu_layer_weather">Surface Pressure (hPa)</span></a></li>
-            <li><a><input type="checkbox" id="Temperature_map" onclick="javascript:showLayer(weatherTemperatureLayers)"><img alt="weather" src="./resources/dialog/AirTemperatureIcon.png" width="24" height="24" border="0"><span id="menu_layer_weather">Temperature (°C)</span></a></li>
-            <li><a><input type="checkbox" id="Precipation" onclick="javascript:showLayer(weatherPrecipationLayers)"><img alt="seamarks" src="./resources/dialog/PrecipitationIcon.png" width="22" height="22" border="0"><span id="menu_layer_seamarks">Precipitation</span></a></li>
-            <li><a><input type="checkbox" id="checkLayerSeaMarks" onclick="javascript:showLayer(layerSeamarks)"><img alt="seamarks" src="./resources/dialog/layer_seamarks.png" width="22" height="22" border="0"><span id="menu_layer_seamarks">Sea marks</span></a></li>
-            <li><a><input type="checkbox" id="checkLayermarineTraffic" onclick="javascript:showLayer(marineTrafficLayer)"><img alt="seamarks" src="./resources/dialog/ship.png" width="22" height="22" border="0"><span id="menu_layer_seamarks">Other ships</span></a></li>
+            <li><a><input type="radio" name="weatherForecastTime0h" value="0h" checked> 0h <input type="radio" name="weatherForecastTime6h" value="6h"> 6h <input type="radio" name="weatherForecastTime12h" value="12h"> 12h <input type="radio" name="weatherForecastTime24h" value="24h"> 24h </a></li>
+            <li><a><input type="checkbox" id="Wind_map" onclick="javascript:showLayer(weatherWindLayers)"><img alt="weather_wind" src="./resources/dialog/WindIcon.png" width="24" height="24"><span id="menu_layer_weather_wind">Wind stream</span></a></li>
+            <li><a><input type="checkbox" id="Pressure_map" onclick="javascript:showLayer(weatherPressureLayers)"><img alt="weather_pressure" src="./resources/dialog/AirPressureIcon.png" width="24" height="24"><span id="menu_layer_weather_pressure">Surface Pressure (hPa)</span></a></li>
+            <li><a><input type="checkbox" id="Temperature_map" onclick="javascript:showLayer(weatherTemperatureLayers)"><img alt="weather_temperatue" src="./resources/dialog/AirTemperatureIcon.png" width="24" height="24"><span id="menu_layer_weather_temperatue">Temperature (°C)</span></a></li>
+            <li><a><input type="checkbox" id="Precipation" onclick="javascript:showLayer(weatherPrecipationLayers)"><img alt="weather_precipitation" src="./resources/dialog/PrecipitationIcon.png" width="22" height="22"><span id="menu_layer_weather_precipitation">Precipitation</span></a></li>
+            <li><a><input type="checkbox" id="checkLayerSeaMarks" onclick="javascript:showLayer(layerSeamarks)"><img alt="seamarks" src="./resources/dialog/layer_seamarks.png" width="22" height="22"><span id="menu_layer_seamarks">Sea marks</span></a></li>
+            <li><a><input type="checkbox" id="checkLayermarineTraffic" onclick="javascript:showLayer(marineTrafficLayer)"><img alt="marineTraffic" src="./resources/dialog/ship.png" width="22" height="22"><span id="menu_layer_marineTraffic">Other ships</span></a></li>
           </ul>
         </li>
         <li>
-          <a><img alt="tools" src="./resources/dialog/tools.png" width="22" height="22" border="0"><span id="menu_tools">Tools</span></a>
+          <a><img alt="tools" src="./resources/dialog/tools.png" width="22" height="22"><span id="menu_tools">Tools</span></a>
           <ul class="sub_menu">
-            <li><a><input type="checkbox" id="Mark_points"><span id="menu_layer_coordinate_grid">Mark points</span></a></li>
-            <li onclick="javascript:showDialog()"><a><span id="menu_layer_coordinate_grid">Enter points</span></a></li>
-            <li><a><input type="file" id="fileInput" accept=".txt,.csv," name="file" style="display: block;" onchange="javascript:readFile(event)"><span id="menu_layer_coordinate_grid">Enter points from file</span></a></li>
-            <li><a><input type="checkbox" id="track"><span id="menu_layer_coordinate_grid">Track position</span></a></li>
-            <li onclick="javascript:saveFile()"><a><input type="file" id="fileOutput" accept=".txt,.csv," name="file" style="display: none;"><span id="menu_layer_coordinate_grid">Save points to file</span></a></li>
+            <li><a><input type="checkbox" id="Mark_points"><span id="markPoints">Mark points</span></a></li>
+            <li onclick="javascript:showDialog()"><a><span id="enterPoints">Enter points</span></a></li>
+            <li><a><input type="file" id="fileInput" accept=".txt,.csv" name="file" style="display: block;" onchange="javascript:readFile(event)"><span id="inputFile">Enter points from file</span></a></li>
+            <li><a><input type="checkbox" id="track"><span id="trackPosition">Track position</span></a></li>
+            <li onclick="javascript:saveFile()"><a><input type="file" id="fileOutput" accept=".txt,.csv" name="file" style="display: none;"><span id="savePointsToFile">Save points to file</span></a></li>
             <li><a><input type="radio" name="radioGroup" id="option1"> Draw orthodrome (great circle)</a></li>
-            <li><a><input type="radio" name="radioGroup" id="option2" checked="true"> Draw loxodrome (rhumb line)</a></li>
+            <li><a><input type="radio" name="radioGroup" id="option2" checked> Draw loxodrome (rhumb line)</a></li>
           </ul>
         </li>
         <li>
-          <a><img alt="Help" src="./resources/dialog/help.png" width="22" height="22" border="0"><span id="menu_help">Help</span></a>
+          <a><img alt="Help" src="./resources/dialog/help.png" width="22" height="22"><span id="menu_help">Help</span></a>
           <ul class="sub_menu">
-            <li onclick="javascript:showMapKey()"><a><img alt="grid" src="./resources/dialog/map_key.png" width="22" height="22" border="0"><span id="menu_layer_coordinate_grid">Map key</span></a></li>
+            <li onclick="javascript:showMapKey()"><a><img alt="grid" src="./resources/dialog/map_key.png" width="22" height="22"><span id="menu_layer_coordinate_grid">Map key</span></a></li>
           </ul>
         </li>
         <li>
-          <a><img alt="Route" src="./resources/dialog/layer_route.png" width="22" height="22" border="0"><span id="menu_routes">Show routes</span></a>
+          <a><img alt="Route" src="./resources/dialog/layer_route.png" width="22" height="22"><span id="menu_routes">Show routes</span></a>
           <ul class="sub_menu">
             <li id="New_route"><a>Save and start new route</a></li>
-            <li><a><input type="checkbox" id="Show_route_1" onclick="javascript:showRoutes(this)">Show route 1</span></a></li>
-            <li><a><input type="checkbox" id="Show_route_2" onclick="javascript:showRoutes(this)">Show route 2</span></a></li>
-            <li><a><input type="checkbox" id="Show_route_3" onclick="javascript:showRoutes(this)">Show route 3</span></a></li>
+            <li><a><input type="checkbox" id="Show_route_1" onclick="javascript:showRoutes(this)">Show route 1</a></li>
+            <li><a><input type="checkbox" id="Show_route_2" onclick="javascript:showRoutes(this)">Show route 2</a></li>
+            <li><a><input type="checkbox" id="Show_route_3" onclick="javascript:showRoutes(this)">Show route 3</a></li>
           </ul>
         </li>
         <li>
@@ -81,14 +81,13 @@
         </li>
       </ul>
     </div>
-  </label>
   <div id="coordinate-text">
     57°N 18°E
   </div>
   <div id="zoom-text">
     Zoom = 6
   </div> 
-    <script type="text/javascript">
+    <script>
         init();
     </script>
   </body>
