@@ -56,6 +56,7 @@ let weatherTemperatureLayers;
 let weatherPrecipationLayers;
 let weatherLayers;
 var weatherTileUrl = "https://weather.openportguide.de/tiles/actual/";
+console.log("Using JavaScript version:", navigator.userAgent);
 const projExtent = ol.proj.get('EPSG:3857').getExtent();
 const startResolution = ol.extent.getWidth(projExtent) / 256;
 const resolutions = new Array(22);
@@ -884,6 +885,31 @@ function convertDMSToDecimal(DMS) {
     return (degrees + minutes/60 + seconds/(60*60));
 }
 
+function getDataFromURL(url) {
+    return fetch(url)
+        .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text(); // or response.json() for JSON data
+        })
+        .then(data => {
+        return data;
+        })
+        .catch(error => {
+        throw new Error('There was a problem with the fetch operation: ' + error.message);
+        });
+}
+
+function setElementTextFromURL(url, ele) {
+    getDataFromURL(url)
+    .then(data => {
+        element(ele).textContent = data;
+    })
+    .catch(error => {
+        console.error(error);
+    });
+}
 /*  WATER API
     function Req(request, layersPoints, lonlat, content, map){
         water = 'abc'
@@ -1067,6 +1093,10 @@ function init(){
         weatherPrecipationLayers['24h'].setOpacity(opacity);
     });
 
+    setElementTextFromURL(weatherTileUrl + "wind_stream/0h/time.txt", 'weatherForecastTime0hText');
+    setElementTextFromURL(weatherTileUrl + "wind_stream/6h/time.txt", 'weatherForecastTime6hText');
+    setElementTextFromURL(weatherTileUrl + "wind_stream/12h/time.txt", 'weatherForecastTime12hText');
+    setElementTextFromURL(weatherTileUrl + "wind_stream/24h/time.txt", 'weatherForecastTime24hText');
     const radioButtons = document.querySelectorAll('input[name="weatherForecastTime"]');
     radioButtons.forEach(function (radioButton) {
         radioButton.addEventListener("change", function () {
