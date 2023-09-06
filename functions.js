@@ -84,7 +84,7 @@ function createLayers(){
             url:
             'https://api.maptiler.com/tiles/land/{z}/{x}/{y}.pbf?key=' + sealayerKey,
             tileSize: 512,
-            maxZoom: 12,
+            maxZoom: 14,
             format: new ol.format.MVT(),
         }),
     });
@@ -586,7 +586,7 @@ function showLayer(layer){
             map.setView(new ol.View({
                 center: map.getView().getCenter(),
                 zoom: map.getView().getZoom(),
-                maxZoom: 12
+                maxZoom: 14
             }));
         }
         
@@ -947,8 +947,8 @@ function init(){
     const view = new ol.View({
         center: ol.proj.fromLonLat([18, 57]),
         zoom: 6,
-        maxZoom: 12,
-        minZoom: 2
+        maxZoom: 14,
+        minZoom: 0
     });
 
     map = new ol.Map({
