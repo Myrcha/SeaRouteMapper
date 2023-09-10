@@ -829,7 +829,7 @@ async function changeStringToPoints(coordinatesFromFile){
         if (i == 0){
             map.setView(new ol.View({
                 center: ol.proj.fromLonLat([lonlat[0], lonlat[1]]),
-                zoom: 6,
+                zoom: map.getView().getZoom(),
             }));
             //Timeout needed to zoom to other place
             let timeoutInMiliseconds = 2000;
