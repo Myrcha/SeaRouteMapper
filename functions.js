@@ -761,7 +761,7 @@ function showDialog() {
             let lon = lonlat[0];
             let lat = lonlat[1];
             if (!isNaN(lon) && !isNaN(lat)){
-                inputPoints.push([lat, lon]);
+                inputPoints.push([lon, lat]);
                 inputIndex++;
                 input.value = "";
                 input2.value = "";
