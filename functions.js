@@ -732,7 +732,7 @@ function showDialog() {
     submitButton.innerHTML = "Submit";
     dialog.appendChild(submitButton);
 
-    submitButton.onclick = function() {
+    submitButton.onclick = async function() {
         lonlat= validateInputs(input.value, input2.value, selectNS.value, selectEW.value);
         let lon = lonlat[0];
         let lat = lonlat[1];
@@ -740,9 +740,23 @@ function showDialog() {
             inputPoints.push([lon, lat]);
             for (let i = 0; i < inputPoints.length; i++)
             {
-                MarkPositions(inputPoints[i], element('popup-content'), map, layersPositions);
+                if (i == 0){
+                    map.setView(new ol.View({
+                        center: ol.proj.fromLonLat([lonlat[0], lonlat[1]]),
+                        zoom: map.getView().getZoom(),
+                    }));
+                    //Timeout needed to zoom to other place
+                    let timeoutInMiliseconds = 500;
+                    await new Promise(resolve => setTimeout(resolve, timeoutInMiliseconds));
+                }
+                var water = checkIfWater(lonlat[0], lonlat[1]);
+                if(water){
+                    MarkPositions(inputPoints[i], element('popup-content'), map, layersPositions);
+                }
+                else {
+                    window.alert("Some of your points were placed on the land. Please fix that by setting proper zoom or choose other points.\nInvalid value for point: "+convertDecimalToDMS(inputPoints[i][1])+","+convertDecimalToDMS(inputPoints[i][0]));
+                }
             }
-            
             dialog.remove();
         }
         if (isNaN(lat)){
@@ -818,7 +832,6 @@ async function changeStringToPoints(coordinatesFromFile){
     // latitude and longitude in that order
     var lines = coordinatesFromFile.split(/\r?\n/);
     var point_info = lines.map(line => line.split(","));
-    var waterFlag = false;
     RemoveAllPoints();
     element('popup-content').innerHTML = '';
 
@@ -839,9 +852,10 @@ async function changeStringToPoints(coordinatesFromFile){
         if(!isNaN(lonlat[0]) && !isNaN(lonlat[1]) && water){
             MarkPositions(lonlat, element('popup-content'), map, layersPositions);
         }
-        if (!water) waterFlag = true;
+        if (!water) {
+            window.alert("Some of your points were placed on the land. Please fix that by setting proper zoom or choose other points.\nInvalid value for point: "+convertDecimalToDMS(lonlat[1])+","+convertDecimalToDMS(lonlat[0]));
+        }
     }
-    if (waterFlag) window.alert("Some of your points were placed on the land. Please fix that");
     element('popup-content').innerHTML = '';
 }
 
