@@ -381,16 +381,14 @@ function midPointFormula(startLonRad, startLatRad, endLonRad, endLatRad) {
 
 function midpointsInterator(iterCounter, startLonRad, startLatRad, endLonRad, endLatRad){
     iterCounter +=1;
-    var var1,var2,var3,var4;
     var midLonRad,midLatRad;
     [midLonRad, midLatRad] = midPointFormula(startLonRad, startLatRad, endLonRad, endLatRad);
+    points.push({ lon: toDegrees(midLonRad), lat: toDegrees(midLatRad) });
     if (iterCounter < 6){
-        [var1, var2] = midpointsInterator(iterCounter, startLonRad, startLatRad, midLonRad, midLatRad);
-        [var3, var4] = midpointsInterator(iterCounter, midLonRad, midLatRad, endLonRad, endLatRad);
-        points.push({ lon: toDegrees(var1), lat: toDegrees(var2) });
-        points.push({ lon: toDegrees(var3), lat: toDegrees(var4) });
+        midpointsInterator(iterCounter, startLonRad, startLatRad, midLonRad, midLatRad);
+        midpointsInterator(iterCounter, midLonRad, midLatRad, endLonRad, endLatRad);
     }
-    return [midLonRad, midLatRad];
+    return;
 }
 
 function calculateGreatCircleRoute(startLon, startLat, endLon, endLat, style) {
