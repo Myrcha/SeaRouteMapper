@@ -379,14 +379,14 @@ function midPointFormula(startLonRad, startLatRad, endLonRad, endLatRad) {
     return [midLonRad, midLatRad];
 }
 
-function midpointsInterator(iterCounter, startLonRad, startLatRad, endLonRad, endLatRad){
+function midpointsIterator(iterCounter, startLonRad, startLatRad, endLonRad, endLatRad){
     iterCounter +=1;
     var midLonRad,midLatRad;
     [midLonRad, midLatRad] = midPointFormula(startLonRad, startLatRad, endLonRad, endLatRad);
     points.push({ lon: toDegrees(midLonRad), lat: toDegrees(midLatRad) });
     if (iterCounter < 6){
-        midpointsInterator(iterCounter, startLonRad, startLatRad, midLonRad, midLatRad);
-        midpointsInterator(iterCounter, midLonRad, midLatRad, endLonRad, endLatRad);
+        midpointsIterator(iterCounter, startLonRad, startLatRad, midLonRad, midLatRad);
+        midpointsIterator(iterCounter, midLonRad, midLatRad, endLonRad, endLatRad);
     }
     return;
 }
@@ -397,7 +397,7 @@ function calculateGreatCircleRoute(startLon, startLat, endLon, endLat, style) {
     var endLonRad = toRadians(endLon);
     var endLatRad = toRadians(endLat);
     points.push({ lon: toDegrees(startLonRad), lat: toDegrees(startLatRad) });
-    midpointsInterator(0, startLonRad, startLatRad, endLonRad, endLatRad);
+    midpointsIterator(0, startLonRad, startLatRad, endLonRad, endLatRad);
     points.push({ lon: toDegrees(endLonRad), lat: toDegrees(endLatRad) });
     points.sort((a, b) => a.lon - b.lon);
     for (let i = 1; i < points.length; i++) {
