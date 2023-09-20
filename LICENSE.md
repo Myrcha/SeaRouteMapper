@@ -1,6 +1,6 @@
 BSD 2-Clause License
 
-Copyright 2023, Jędrzej Myrcha.
+Copyright 2005-present, OpenLayers Contributors All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
