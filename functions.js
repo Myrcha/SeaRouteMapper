@@ -963,7 +963,15 @@ function init() {
 		target: 'map',
 		layers: [
 			new ol.layer.Tile({
-				source: new ol.source.OSM()
+				source: new ol.source.OSM({
+					attributions: [
+						'<a href="https://weather.openportguide.de/index.php/en/" target="_blank">OpenPortGuide</a>',
+						'<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a>',
+						'<a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>',
+						'<a href="https://map.openseamap.org/legend.php?lang=pl&page=license" target="_blank">© OpenSeaMap</a>',
+						'<a href="https://www.marinetraffic.com/en/p/user-agreement" target="_blank">© MarineTraffic</a>'
+					],
+				})
 			}),
 			sealayer,
 			marineTrafficLayer,
