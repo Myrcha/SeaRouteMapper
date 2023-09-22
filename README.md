@@ -1,6 +1,6 @@
 # SeaRouteMapper
 
-Sea Route Mapper is a tool to plan routes on the water
+Sea Route Mapper is a tool to plan routes on the water <br />
 Most of functions on the map are using [OpenLayers](https://openlayers.org/) library
 
 ## Features
