@@ -142,4 +142,4 @@ There is possibility to turn on tracking your current position - the event is ma
 </p>
 
 ### Other
-- If user clicks on the land the warning will be shown - the tool checks if user is not passing not valid data
+- If user clicks on the land the warning will be shown - the tool checks if user is passing not valid data

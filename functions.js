@@ -642,13 +642,13 @@ function formatLonLatMessage(lonlat) {
 }
 
 function validateInputs(latitude, longitude, NS, EW) {
-	if (!latitude && !longitude) {
+	if ((!latitude && !longitude) || ((!(NS == 'N' || NS == 'S')) && (!(EW == 'E' || EW == 'W')))) {
 		return [NaN, NaN];
 	}
-	if (!latitude) {
+	if (!latitude || (!(NS == 'N' || NS == 'S'))) {
 		return [longitude, NaN];
 	}
-	if (!longitude) {
+	if (!longitude || (!(EW == 'E' || EW == 'W'))) {
 		return [NaN, latitude];
 	}
 	let lat = parseFloat(convertDMSToDecimal(latitude));
@@ -831,24 +831,29 @@ async function changeStringToPoints(coordinatesFromFile) {
 
 	for (var i = 0; i < point_info.length; i++) {
 		if (point_info[i] == '') continue;
-		var point_info_separated = point_info[i].flatMap(str => str.match(/(\d+\°?\s?\d+\'?\s?\d+.\d+\"?)|(\d+(\.\d+)?)|([NSEW])/g));
-		var lonlat = validateInputs(point_info_separated[0], point_info_separated[2], point_info_separated[1], point_info_separated[3]);
-		if (i == 0) {
-			map.setView(new ol.View({
-				center: ol.proj.fromLonLat([lonlat[0], lonlat[1]]),
-				zoom: map.getView().getZoom(),
-			}));
-			//Timeout needed to zoom to other place
-			let timeoutInMiliseconds = 2000;
-			await new Promise(resolve => setTimeout(resolve, timeoutInMiliseconds));
+		var point_info_separated = point_info[i].flatMap(str => str.match(/(\d+[°]?\s?\d+[']?\s?\d+["]?[.]?[\d+]?)|(\d+(\.\d+)?)|([NSEW])/g));
+		if (point_info_separated.length == 4) {
+			var lonlat = validateInputs(point_info_separated[0], point_info_separated[2], point_info_separated[1], point_info_separated[3]);
+			if (i == 0 && !isNaN(lonlat[0]) && !isNaN(lonlat[1])) {
+				map.setView(new ol.View({
+					center: ol.proj.fromLonLat([lonlat[0], lonlat[1]]),
+					zoom: map.getView().getZoom(),
+				}));
+				//Timeout needed to zoom to other place
+				let timeoutInMiliseconds = 2000;
+				await new Promise(resolve => setTimeout(resolve, timeoutInMiliseconds));
+			}
+			var water = checkIfWater(lonlat[0], lonlat[1]);
+			if (!isNaN(lonlat[0]) && !isNaN(lonlat[1]) && water) {
+				MarkPositions(lonlat, element('popup-content'), map, layersPositions);
+			}
+			if (!water) {
+				window.alert("Some of your points were placed on the land. Please fix that by setting proper zoom or choose other points.\nInvalid value for point: " + convertDecimalToDMS(lonlat[1]) + "," + convertDecimalToDMS(lonlat[0]));
+			}
+		} else {
+			window.alert("It should be exact 4 pieces of informations of point - got " + point_info_separated.length + ": " + point_info_separated);
 		}
-		var water = checkIfWater(lonlat[0], lonlat[1]);
-		if (!isNaN(lonlat[0]) && !isNaN(lonlat[1]) && water) {
-			MarkPositions(lonlat, element('popup-content'), map, layersPositions);
-		}
-		if (!water) {
-			window.alert("Some of your points were placed on the land. Please fix that by setting proper zoom or choose other points.\nInvalid value for point: " + convertDecimalToDMS(lonlat[1]) + "," + convertDecimalToDMS(lonlat[0]));
-		}
+
 	}
 	element('popup-content').innerHTML = '';
 }
