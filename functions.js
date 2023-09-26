@@ -831,7 +831,7 @@ async function changeStringToPoints(coordinatesFromFile) {
 
 	for (var i = 0; i < point_info.length; i++) {
 		if (point_info[i] == '') continue;
-		var point_info_separated = point_info[i].flatMap(str => str.match(/(\d+[°]?\s?\d+[']?\s?\d+["]?[.]?[\d+]?)|(\d+(\.\d+)?)|([NSEW])/g));
+		var point_info_separated = point_info[i].flatMap(str => str.match(/(\d+[°]?\s?\d+[']?\s?\d+[.]?\d?\d?["]?)|(\d+(\.\d+)?)|([NSEW])/g));
 		if (point_info_separated.length == 4) {
 			var lonlat = validateInputs(point_info_separated[0], point_info_separated[2], point_info_separated[1], point_info_separated[3]);
 			if (i == 0 && !isNaN(lonlat[0]) && !isNaN(lonlat[1])) {
